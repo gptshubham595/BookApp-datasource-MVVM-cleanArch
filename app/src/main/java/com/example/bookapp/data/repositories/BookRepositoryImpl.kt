@@ -4,6 +4,7 @@ import com.example.bookapp.data.datasource.DataSource
 import com.example.bookapp.data.models.Book
 import com.example.bookapp.data.models.Result
 import com.example.bookapp.domain.interfaces.IBookRepository
+import com.example.bookapp.utils.SingletonObject.getAPIInterfaceInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -12,7 +13,10 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 
 class BookRepositoryImpl constructor(private val dataSource: DataSource) : IBookRepository {
+
+    private val apiInterface = getAPIInterfaceInstance()
     override suspend fun getBooks(): Flow<Result<List<Book>>> = flow<Result<List<Book>>> {
+//        apiInterface.fetchData()
         emit(Result.Success(dataSource.getBooks()))
     }.onStart { emit(Result.Loading) }.flowOn(Dispatchers.IO)
 
